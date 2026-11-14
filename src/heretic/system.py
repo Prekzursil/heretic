@@ -74,6 +74,7 @@ def get_amdgpu_driver_version() -> str | None:
         if output.strip():
             return output.strip().replace("\n", " | ")
     except (subprocess.CalledProcessError, FileNotFoundError):
+        # amd-smi is not installed or failed; try the next method.
         pass
 
     # 2. Try rocm-smi --showdriverversion
@@ -87,6 +88,7 @@ def get_amdgpu_driver_version() -> str | None:
             if "Driver version" in line:
                 return line.split(":")[-1].strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
+        # rocm-smi is not installed or failed; try the next method.
         pass
 
     # 3. Try /sys/module/amdgpu/version (Linux kernel driver version)
@@ -97,6 +99,8 @@ def get_amdgpu_driver_version() -> str | None:
                 with open(version_path, "r", encoding="utf-8") as f:
                     return f.read().strip()
     except Exception:
+        # The sysfs version file exists only on Linux systems with the
+        # amdgpu kernel module loaded; absence is not an error here.
         pass
 
     return None
