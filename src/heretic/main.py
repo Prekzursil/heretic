@@ -901,6 +901,8 @@ def run():
                             n_trials=settings.n_trials - len(study.trials),
                         )
                     except KeyboardInterrupt:
+                        # Optimization aborted by the user; keep the
+                        # trials completed so far.
                         pass
 
                     if len(study.trials) == settings.n_trials:
@@ -1439,6 +1441,8 @@ def run():
                                             first_row = False
                                             first_benchmark = False
                             except KeyboardInterrupt:
+                                # Benchmark run cancelled by the user;
+                                # keep results of completed benchmarks.
                                 pass
 
                             # The benchmark run might have been cancelled by the user
@@ -1461,7 +1465,7 @@ def main():
 
     try:
         run()
-    except BaseException as error:
+    except (Exception, KeyboardInterrupt) as error:
         # Transformers appears to handle KeyboardInterrupt (or BaseException)
         # internally in some places, which can re-raise a different error in the handler,
         # masking the root cause. We therefore check both the error itself and its context.

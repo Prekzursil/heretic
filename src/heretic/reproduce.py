@@ -144,8 +144,7 @@ class MismatchSeverity(IntEnum):
                 return "[red]high[/]"
             case MismatchSeverity.CRITICAL:
                 return "[bold red]critical[/]"
-            case _:
-                raise ValueError(f"unknown MismatchSeverity value: {self}")
+        raise ValueError(f"unknown MismatchSeverity value: {self}")
 
 
 def get_package_mismatch_severity(package_name: str) -> MismatchSeverity:
@@ -186,10 +185,9 @@ def format_version_information(version_information: dict[str, Any]) -> str:
                 # Append a random number to ensure that two local installations
                 # are always considered to be different versions.
                 return f"{version}-local-{random.randint(2**16, 2**17)}"
-            case _:
-                raise ValueError(
-                    f"unknown metadata.type value in version information: {metadata['type']}"
-                )
+        raise ValueError(
+            f"unknown metadata.type value in version information: {metadata['type']}"
+        )
     else:
         return f"{version}-unknown-{random.randint(2**16, 2**17)}"
 
